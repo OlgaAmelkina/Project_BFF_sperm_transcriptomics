@@ -1,0 +1,333 @@
+---
+title: "Part 1. Visualization of gene expression patterns for all diet types"
+author: "Olga Amelkina"
+date: "3/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# 1.Groups used for analysis  
+1. **Control** diet, labeled C01-C10, n = 10  
+2. **Vitamin E** diet, labeled VE1.1-2 for 1st generation (n = 2) and VE2.01-13 for 2d generation (n = 13)  
+3. **Wild** individuals, labeled W1-4, n = 4  
+4. **Carcass** diet, labeled Car1-2, n = 2  
+5. **Various** individuals excluded from the study, labeled Var1-2, n = 2  
+
+## 1.1.List of all individuals
+```{r Metadata, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+data <- read.csv("data/metadata.csv")
+kable(data, caption = "Metadata")
+```
+
+# 2.Code for getting normalized expression data with DESeq2  
+This code is hidden from the report due to its length. If needed, it can be found in Part1_Data_Visualization.Rmd file.
+```{r DESeq2-all, eval=FALSE, warning=FALSE, include=FALSE}
+library(tximport)
+library(DESeq2)
+library(tidyverse)
+library(gtools)
+library(ggfortify)
+library(ggrepel)
+
+
+##Import RSEM
+#Locate the directory containing RSEM files
+dir <- "data/RSEM/Gene_counts/"
+list.files(dir)
+
+#Create a vector pointing to the quantification files
+samples <- read.table("data/RSEM/SampleIDs.txt", header = TRUE)
+samples
+
+files <- file.path(dir, samples$ID, "genes.results")
+names(files) <- samples$ID
+all(file.exists(files))
+View(files)
+
+#Import transcipt-level estimates to create count matrix
+txi.rsem <- tximport(files, type = "rsem", txIn = FALSE, txOut = FALSE)                  
+head(txi.rsem$counts)
+txi.rsem$length[txi.rsem$length <= 0] <- 1
+#Note: to import isoforms.results, set type to "rsem" and txIn and txOut to TRUE
+
+
+##Create dds file in DESeq2
+colData <- read.csv("data/metadata.csv", row.names=1)
+
+all(rownames(colData) %in% colnames(txi.rsem$counts))
+all(rownames(colData) == colnames(txi.rsem$counts))
+
+colData$Diet <- factor(colData$Diet)
+
+dds <- DESeqDataSetFromTximport(txi.rsem, colData = colData, design = ~ Diet)
+dds
+
+#Run DESeq2
+levels(dds$Diet)
+dds$Diet <- factor(dds$Diet, levels=c("Control", "Carcass", "Various", "1st.gen.VitE", "2d.gen.VitE", "Wild"))
+dds <- DESeq(dds)
+
+##Export rlog normalized data for plots
+rlt <- rlogTransformation(dds)
+
+pcaData <- plotPCA(rlt, intgroup='Diet', returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+write.csv(pcaData, file="data/Plots/PCA_data_all.csv", row.names = FALSE)
+write.csv(percentVar, file="data/Plots/PCA_percentVar_all.csv", row.names = FALSE)
+
+rlt_mat <- assay(rlt)
+dim(rlt_mat)
+write.csv(rlt_mat, file="data/Plots/Rlt_matrix_all_IDs.csv", row.names = TRUE)
+write.csv(rlt_mat, file="data/Plots/Rlt_matrix_all_separate.csv", row.names = FALSE)
+
+#---------------------------------------
+##Export PC 3 and 4 for PCA
+DESeq2:::plotPCA.DESeqTransform
+plotPCA <- function (rlt, intgroup = "Diet", ntop = 500, returnData = FALSE) 
+{
+  rv <- rowVars(assay(rlt))
+  select <- order(rv, decreasing = TRUE)[seq_len(min(ntop, 
+                                                     length(rv)))]
+  pca <- prcomp(t(assay(rlt)[select, ]))
+  percentVar <- pca$sdev^2/sum(pca$sdev^2)
+  if (!all(intgroup %in% names(colData(rlt)))) {
+    stop("the argument 'intgroup' should specify columns of colData(dds)")
+  }
+  intgroup.df <- as.data.frame(colData(rlt)[, intgroup, 
+                                               drop = FALSE])
+  group <- if (length(intgroup) > 1) {
+    factor(apply(intgroup.df, 1, paste, collapse = " : "))
+  }
+  else {
+    colData(rlt)[[intgroup]]
+  }
+  d <- data.frame(PC3 = pca$x[, 3], PC4 = pca$x[, 4], group = group, 
+                  intgroup.df, name = colnames(rlt))
+  if (returnData) {
+    attr(d, "percentVar") <- percentVar[3:4]
+    return(d)
+  }
+  ggplot(data = d, aes_string(x = "PC3", y = "PC4", color = "group")) + 
+    geom_point(size = 3) + xlab(paste0("PC3: ", round(percentVar[3] * 
+    100), "% variance")) + ylab(paste0("PC4: ", round(percentVar[4] * 
+    100), "% variance")) + coord_fixed()
+}
+
+plotPCA(rlt, intgroup='Diet')
+
+pcaData <- plotPCA(rlt, intgroup='Diet', returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+write.csv(pcaData, file="data/Plots/PCA_data_all_PC3and4.csv", row.names = FALSE)
+write.csv(percentVar, file="data/Plots/PCA_percentVar_all_PC3and4.csv", row.names = FALSE)
+
+#---------------------------------------
+##Export PC 5 and 6 for PCA
+plotPCA <- function (rlt, intgroup = "Diet", ntop = 500, returnData = FALSE) 
+{
+  rv <- rowVars(assay(rlt))
+  select <- order(rv, decreasing = TRUE)[seq_len(min(ntop, 
+                                                     length(rv)))]
+  pca <- prcomp(t(assay(rlt)[select, ]))
+  percentVar <- pca$sdev^2/sum(pca$sdev^2)
+  if (!all(intgroup %in% names(colData(rlt)))) {
+    stop("the argument 'intgroup' should specify columns of colData(dds)")
+  }
+  intgroup.df <- as.data.frame(colData(rlt)[, intgroup, 
+                                            drop = FALSE])
+  group <- if (length(intgroup) > 1) {
+    factor(apply(intgroup.df, 1, paste, collapse = " : "))
+  }
+  else {
+    colData(rlt)[[intgroup]]
+  }
+  d <- data.frame(PC5 = pca$x[, 5], PC6 = pca$x[, 6], group = group, 
+                  intgroup.df, name = colnames(rlt))
+  if (returnData) {
+    attr(d, "percentVar") <- percentVar[5:6]
+    return(d)
+  }
+  ggplot(data = d, aes_string(x = "PC5", y = "PC6", color = "group")) + 
+    geom_point(size = 3) + xlab(paste0("PC5: ", round(percentVar[5] * 
+                                                        100), "% variance")) + ylab(paste0("PC6: ", round(percentVar[6] * 
+                                                                                                            100), "% variance")) + coord_fixed()
+}
+
+plotPCA(rlt, intgroup='Diet')
+
+pcaData <- plotPCA(rlt, intgroup='Diet', returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+write.csv(pcaData, file="data/Plots/PCA_data_all_PC5and6.csv", row.names = FALSE)
+write.csv(percentVar, file="data/Plots/PCA_percentVar_all_PC5and6.csv", row.names = FALSE)
+```
+
+# 3.Principal Component Analysis
+## 3.1.PCA plot for all individuals  
+#### Unlabeled  
+```{r PCA-all, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+library(ggplot2)
+
+dataPCA <- read.csv("data/Plots/PCA_data_all.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_all.csv"))
+
+ggplot(dataPCA, aes(PC1, PC2, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#66a61e", "#1b9e77", "#e6ab02", "#7570b3", "#e7298a", "#d95f02")) +
+  geom_point(size=3) +
+  xlab(paste0("PC1: ", Var[1], "% variance")) +
+  ylab(paste0("PC2: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+
+
+```
+    
+#### Labeled
+```{r PCA-all-labeled, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_all.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_all.csv"))
+
+ggplot(dataPCA, aes(PC1, PC2, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#66a61e", "#1b9e77", "#e6ab02", "#7570b3", "#e7298a", "#d95f02")) +
+  geom_point(size=3) +
+  geom_text(aes(label = name), size=3.5, nudge_y = 5, alpha = 0.9) +
+  xlab(paste0("PC1: ", Var[1], "% variance")) +
+  ylab(paste0("PC2: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+```
+
+From these PCA plots we can see that there is no clear grouping of individuals based on transcriptome-wide normalized gene expression. Two individuals seem to be separated from the rest: one from Control diet (C09) and one Wild (W1). All this might implicate that the differences between individuals are bigger than between diets. 
+
+## 3.2.PCA plots excluding C09 and W1
+Exclusion of these two individuals did not change the observed pattern (absence of grouping).  
+
+#### Unlabeled
+```{r PCA-excl2, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_excl2.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_excl2.csv"))
+
+ggplot(dataPCA, aes(PC1, PC2, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#66a61e", "#1b9e77", "#e6ab02", "#7570b3", "#e7298a", "#d95f02")) +
+  geom_point(size=3) +
+  xlab(paste0("PC1: ", Var[1], "% variance")) +
+  ylab(paste0("PC2: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+
+```
+    
+#### Labeled
+```{r PCA-excl2-labeled, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_excl2.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_excl2.csv"))
+
+ggplot(dataPCA, aes(PC1, PC2, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#66a61e", "#1b9e77", "#e6ab02", "#7570b3", "#e7298a", "#d95f02")) +
+  geom_point(size=3) +
+  geom_text(aes(label = name), size=3.5, nudge_y = 5, alpha = 0.9) +
+  xlab(paste0("PC1: ", Var[1], "% variance")) +
+  ylab(paste0("PC2: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+
+```
+
+## 3.3.PCA plots for PC3-6
+Next PCA plots are created to show additional principal components. However, still no grouping pattern can be observed.  
+
+### PC3 and PC4
+```{r PCA-PC3-PC4, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_all_PC3and4.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_all_PC3and4.csv"))
+
+ggplot(dataPCA, aes(PC3, PC4, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#66a61e", "#1b9e77", "#e6ab02", "#7570b3", "#e7298a", "#d95f02")) +
+  geom_point(size=3) +
+  geom_text(aes(label = name), size=3.5, nudge_y = 5, alpha = 0.9) +
+  xlab(paste0("PC3: ", Var[1], "% variance")) +
+  ylab(paste0("PC4: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+
+```
+  
+### PC5 and PC6
+```{r PCA-PC5-PC6, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_all_PC5and6.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_all_PC5and6.csv"))
+
+ggplot(dataPCA, aes(PC5, PC6, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#66a61e", "#1b9e77", "#e6ab02", "#7570b3", "#e7298a", "#d95f02")) +
+  geom_point(size=3) +
+  geom_text(aes(label = name), size=3.5, nudge_y = 5, alpha = 0.9) +
+  xlab(paste0("PC5: ", Var[1], "% variance")) +
+  ylab(paste0("PC6: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+```
+
+# 4.Heatmap with hierarchical clustering  
+## 4.1.Heatmap for all indibiduals
+Heatmap with one-way hierarchical clustering analysis (Euclidean method, complete linkage) using Z-score for RLE normalized values of all expressed genes.   
+Labels correspond to individual IDs from the Metadata table. 
+```{r Heatmap-all, echo=FALSE, message=FALSE, warning=FALSE}
+library(pheatmap)
+
+data <- read.csv("data/Plots/Rlt_matrix_all.csv")
+
+data[data == 0] <- NA
+data_for_hm <- na.omit(data)
+
+diet_df <- data.frame("Diet" = c(rep("Control", 10), rep("Carcass", 2), rep("Various", 2), rep("1st.gen.VitE", 2), rep("2d.gen.VitE", 13), rep("Wild", 4)))
+rownames(diet_df) = colnames(data_for_hm)
+
+pheatmap(data_for_hm, show_rownames = F, scale='row', annotation_col = diet_df, cutree_cols = 5,
+         clustering_distance_cols = "euclidean", clustering_method = "complete")
+```
+
+# 5.Graphs used for Nadya's dissertation  
+For Nadya's dissertation, we decided to exclude Various group (individuals excluded from the study) and unite 2 generations of Vitamin E diet into one group (1st generation has only 2 individuals)
+
+## 5.1.PCA plot
+#### Unlabeled
+```{r PCA-Figure, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_exclVar.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_exclVar.csv"))
+
+ggplot(dataPCA, aes(PC1, PC2, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#e7298a", "#7570b3", "#1b9e77", "#d95f02")) +
+  geom_point(size=3) +
+  xlab(paste0("PC1: ", Var[1], "% variance")) +
+  ylab(paste0("PC2: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+```
+
+#### Labeled
+```{r PCA-Figure-labeled, echo=FALSE, message=FALSE, warning=FALSE}
+dataPCA <- read.csv("data/Plots/PCA_data_exclVar.csv")
+Var <- as.matrix(read.csv("data/Plots/PCA_percentVar_exclVar.csv"))
+
+ggplot(dataPCA, aes(PC1, PC2, color=Diet, shape = Diet)) + 
+  scale_color_manual(values = c("#e7298a", "#7570b3", "#1b9e77", "#d95f02")) +
+  geom_point(size=3) +
+  geom_text(aes(label = name), size=3.5, nudge_y = 5, alpha = 0.9) +
+  xlab(paste0("PC1: ", Var[1], "% variance")) +
+  ylab(paste0("PC2: ", Var[2], "% variance")) +
+  coord_fixed() + theme_bw()
+```
+
+
+## 5.2. Heatmap
+```{r Heatmap-Figure, echo=FALSE, message=FALSE, warning=FALSE}
+data <- read.csv("data/Plots/Rlt_matrix_exclVar.csv")
+
+data[data == 0] <- NA
+data_for_hm <- na.omit(data)
+
+diet_df <- data.frame("Diet" = c(rep("Control", 10), rep("Carcass", 2), rep("VitE", 15), rep("Wild", 4)))
+rownames(diet_df) = colnames(data_for_hm)
+annoCol <- list(Diet=c(Control = "#7570b3", Carcass = "#e7298a", VitE = "#1b9e77", Wild = "#d95f02"))
+
+pheatmap(data_for_hm, show_rownames = F, scale='row', annotation_col = diet_df, cutree_cols = 1,
+         clustering_distance_cols = "euclidean", clustering_method = "complete", 
+         annotation_colors = annoCol)
+
+```
+
