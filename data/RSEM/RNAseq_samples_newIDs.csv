@@ -1,0 +1,34 @@
+New_ID,Seq_ID,Sample_collection_date,Name,ID,Diet ,Sex,Location,Sample_number,Reads generated
+C01,NA-002,15-04-21,Arthur,9571,Control,M,FCC,2,~37M reads
+C02,NA-003,16-04-21,Calo,9592,Control,M,FCC,3,~37M reads
+C03,NA-007,12-04-21,Bannner,9519,Control,M,FCC,7,~37M reads
+C04,NA-009,14-04-21,Cushman,9430,Control,M,FCC,9,~37M reads
+C05,NA-014,21-04-21,Boatman,9350,Control,M,LZG,14,~37M reads
+C06,NA-016,12-04-21,Hawksbill,9128,Control,M,FCC,16,~37M reads
+C07,NA-022,21-04-21,Wilde,9276,Control,M,LZG,22,~37M reads
+C08,NA-023,13-04-21,Kibosh,9291,Control,M,FCC,23,~37M reads
+C09,NA-026,21-04-21,Meusli,9443,Control,M,LZG,26,~37M reads
+C10,NA-029,14-04-21,Pikachu,9576,Control,M,FCC,29,~37M reads
+Car1,NA-001,16-04-21,Doublemint,9469,Carcass,M,FCC,1,~37M reads
+Car2,NA-027,15-04-21,Rockbiter,9452,Carcass,M,FCC,27,~37M reads
+Var1,NA-004,16-04-21,Tater,9051,Not on study,M,FCC,4,~37M reads
+Var2,NA-015,16-04-21,Woodford,9072,Not on study,M,FCC,15,~37M reads
+VE1.1,NA-005,15-04-21,Captain Barnacles,8995,Vit. E,M,FCC,5,~37M reads
+VE1.2,NA-006,15-04-21,Dash,8593,Vit. E,M,FCC,6,~37M reads
+VE2.01,NA-008,12-04-21,Balthasar,9227,Vit. E,M,FCC,8,~37M reads
+VE2.02,NA-010,14-04-21,Bosler,9247,Vit. E,M,FCC,10,~37M reads
+VE2.03,NA-011,14-04-21,Cameron,9219,Vit. E,M,FCC,11,~37M reads
+VE2.04,NA-012,14-04-21,Flatback,9476,Vit. E,M,FCC,12,~37M reads
+VE2.05,NA-013,13-04-21,HopperStoppeer,9311,Vit. E,M,FCC,13,~37M reads
+VE2.06,NA-017,13-04-21,Heavenly,9135,Vit. E,M,FCC,17,~37M reads
+VE2.07,NA-018,14-04-21,Will Ferret,9150,Vit. E,M,FCC,18,~37M reads
+VE2.08,NA-019,13-04-21,Oslo,9181,Vit. E,M,FCC,19,~37M reads
+VE2.09,NA-020,12-04-21,Statler,9194,Vit. E,M,FCC,20,~37M reads
+VE2.10,NA-021,13-04-21,Waldorf,9195,Vit. E,M,FCC,21,~37M reads
+VE2.11,NA-024,12-04-21,Myrcenary,9318,Vit. E,M,FCC,24,~37M reads
+VE2.12,NA-025,12-04-21,Martini,9373,Vit. E,M,FCC,25,~37M reads
+VE2.13,NA-028,14-04-21,Wellington,9568,Vit. E,M,FCC,28,~37M reads
+W1,NA-030,17-03-20,RMA13,,Wild,M,RMA,30,~37M reads
+W2,NA-031,17-03-20,RMA14,,Wild,M,RMA,31,~37M reads
+W3,NA-032,17-03-20,RMA15,,Wild,M,RMA,32,~37M reads
+W4,NA-033,17-03-20,RMA16,,Wild,M,RMA,33,~37M reads
