@@ -10,4 +10,6 @@ editor_options:
 
 ## [**Part 1.**](Part1_Data_Visualization.html)   Visualization of gene expression patterns for all diet types
 
-## [**Part 2.**](Part2_Differential_Expression) Differential expression analysis
+## [**Part 2.**](Part2_Differential_Expression) Differential expression analysis  
+
+## [**Part 3.**](Part3_Enrichment_Analysis) Functional enrichment analysis
