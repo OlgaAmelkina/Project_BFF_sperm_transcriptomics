@@ -305,7 +305,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-03-23
+<strong>Last updated:</strong> 2022-03-24
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -336,16 +336,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOlgaAmelkinaProjectBFFspermtranscriptomicstreee9d6bd4a775f0ac42d5660d9fc7791a6d952c6a4targetblanke9d6bd4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/OlgaAmelkina/Project_BFF_sperm_transcriptomics/tree/e9d6bd4a775f0ac42d5660d9fc7791a6d952c6a4" target="_blank">e9d6bd4</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOlgaAmelkinaProjectBFFspermtranscriptomicstree3dc6e282f52814983d3e02666aaec4696d17f770targetblank3dc6e28a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/OlgaAmelkina/Project_BFF_sperm_transcriptomics/tree/3dc6e282f52814983d3e02666aaec4696d17f770" target="_blank">3dc6e28</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomOlgaAmelkinaProjectBFFspermtranscriptomicstreee9d6bd4a775f0ac42d5660d9fc7791a6d952c6a4targetblanke9d6bd4a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomOlgaAmelkinaProjectBFFspermtranscriptomicstree3dc6e282f52814983d3e02666aaec4696d17f770targetblank3dc6e28a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/OlgaAmelkina/Project_BFF_sperm_transcriptomics/tree/e9d6bd4a775f0ac42d5660d9fc7791a6d952c6a4" target="_blank">e9d6bd4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/OlgaAmelkina/Project_BFF_sperm_transcriptomics/tree/3dc6e282f52814983d3e02666aaec4696d17f770" target="_blank">3dc6e28</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -357,14 +357,9 @@ Ignored files:
 Untracked files:
     Untracked:  Part1_Data_Visualization.Rmd
     Untracked:  Part1_Data_Visualization.html
-    Untracked:  data/Mnigripes_GeneIDs.csv
-    Untracked:  data/Plots/
-    Untracked:  data/RSEM/
-    Untracked:  data/metadata.csv
-    Untracked:  data/metadata_3groups.csv
-    Untracked:  data/metadata_3groups_excl2.csv
-    Untracked:  data/metadata_excl2.csv
-    Untracked:  data/metadata_exclVar.csv
+    Untracked:  Part2_Differential_Expression.Rmd
+    Untracked:  Part2_Differential_Expression.html
+    Untracked:  output/DEGs/
     Untracked:  renv.lock
     Untracked:  renv/
 
@@ -408,6 +403,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/OlgaAmelkina/Project_BFF_sperm_transcriptomics/blob/3dc6e282f52814983d3e02666aaec4696d17f770/analysis/index.Rmd" target="_blank">3dc6e28</a>
+</td>
+<td>
+Olga Amelkina
+</td>
+<td>
+2022-03-24
+</td>
+<td>
+Updating index file
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/OlgaAmelkina/Project_BFF_sperm_transcriptomics/ddff6437585cb06bc9288542b02b7aee4b0f3025/docs/index.html" target="_blank">ddff643</a>
+</td>
+<td>
+Olga Amelkina
+</td>
+<td>
+2022-03-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -466,7 +495,12 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Part 1. Visualization of gene expression patterns for all diet types <a href="Part1_Data_Visualization.html">link</a></p>
+<div id="part-1.-visualization-of-gene-expression-patterns-for-all-diet-types" class="section level2">
+<h2><a href="Part1_Data_Visualization.html"><strong>Part 1.</strong></a> Visualization of gene expression patterns for all diet types</h2>
+</div>
+<div id="part-2.-differential-expression-analysis" class="section level2">
+<h2><a href="Part2_Differential_Expression"><strong>Part 2.</strong></a> Differential expression analysis</h2>
+</div>
 
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
