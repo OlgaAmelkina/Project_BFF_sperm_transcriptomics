@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 All deferentially expressed genes that had gene name and gene description were used as an input for DAVID tool to explore functional enrichment. 
 All DAVID intput and output can be found under output/DAVID.  
 Both homo sapiens and mustela putorius furo were used as a background for enrichment analysis. Using mpfuro as a background returned much less terms than homo sapiens, but all were already included in homo sapiens enrichment results. Therefore, main graphs were build based on homo sapiens background.  
-Cytoscape with EnrichmentMao app was used to build networks based on DAVID enrichment output. Upregulated and downregulated genes were checked separately to identify terms enriched in one group compared to the other.  
+Cytoscape with EnrichmentMap app were used to build networks based on DAVID enrichment output. Upregulated and downregulated genes were checked separately to identify terms enriched in one group compared to the other.  
 Terms were clustered first sing MLC clustering algorithm, then manually adjusted based on DAVID clustering and biological meaning and annotated using AutoAnnotate app in Cytoscape.  
 
 ## 1.1. Homo sapiens background  
@@ -51,6 +51,7 @@ plot(fig_svg)
 
 ## 2.2 Vitamin E vs Control enrichment  
 This Figure is still under construction.  
+
 ### Terms enriched in Vitamin E (upregulated genes)
 ```{r Enr-plots_VEvsC_UP, echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)
