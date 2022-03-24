@@ -1,0 +1,96 @@
+---
+title: "Part 3. Functional Enrichment Analysis"
+author: "Olga Amelkina"
+date: "3/24/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Functional networks based on pairwise Wald test  
+All deferentially expressed genes that had gene name and gene description were used as an input for DAVID tool to explore functional enrichment. 
+All DAVID intput and output can be found under output/DAVID.  
+Both homo sapiens and mustela putorius furo were used as a background for enrichment analysis. Using mpfuro as a background returned much less terms than homo sapiens, but all were already included in homo sapiens enrichment results. Therefore, main graphs were build based on homo sapiens background.  
+Cytoscape with EnrichmentMao app was used to build networks based on DAVID enrichment output. Upregulated and downregulated genes were checked separately to identify terms enriched in one group compared to the other.  
+Terms were clustered first sing MLC clustering algorithm, then manually adjusted based on DAVID clustering and biological meaning and annotated using AutoAnnotate app in Cytoscape.  
+
+## 1.1. Homo sapiens background  
+This networks is based on DAVID output from genes that satisfy raw p-value < 0.05 and absolute FC > 2.  
+Only GO and KEGG databases are used, enrichment p-value (EASE) cutoff is set to 0.05.
+```{r Network_praw_hsp, echo=FALSE, fig.height=80, fig.width=50, message=FALSE, warning=FALSE}
+library(magick)
+library(cowplot)
+fig_svg<-cowplot::ggdraw()+cowplot::draw_image("output/DAVID/EM_hsapiens_enrichment.svg")
+plot(fig_svg)
+
+```
+
+## 1.1. Mustela putorius furo background  
+This networks is based on DAVID output from genes that satisfy raw p-value < 0.05 and absolute FC > 2.  
+All databases are used, enrichment p-value (EASE) cutoff is set to 0.05.
+```{r Network_praw_mpf, echo=FALSE, fig.height=80, fig.width=50, message=FALSE, warning=FALSE}
+library(magick)
+library(cowplot)
+fig_svg<-cowplot::ggdraw()+cowplot::draw_image("output/DAVID/EM_mpfuro_enrichment.svg")
+plot(fig_svg)
+
+```
+
+# 2. Enrichment results for Nadya's dissertation  
+For Nadya's dissertation, we decided to simplify enrichment results as bar plots instead of networks.  
+
+## 2.1. Control/Vitamin E vs Wild enrichment
+```{r Enr1_Figure, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+library(magick)
+library(cowplot)
+fig_svg<-cowplot::ggdraw()+cowplot::draw_image("output/DAVID/Figure_Enr1_david_plots.svg")
+plot(fig_svg)
+```
+
+## 2.2 Vitamin E vs Control enrichment  
+This Figure is still under construction.  
+### Terms enriched in Vitamin E (upregulated genes)
+```{r Enr-plots_VEvsC_UP, echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(RColorBrewer)
+
+data <- read.csv("data/Enrichment/VEvsC_praw_UP_selected_long.csv")
+
+data$Name <- as.factor(data$Name)
+data$Count <- as.integer(data$Count)
+data$Category <- as.factor(data$Category)
+
+ggplot(data, aes(x = Name, y = Count, fill = Category)) + 
+  geom_bar(stat = "identity") + 
+  scale_fill_brewer(palette = "Set2") +
+  theme(axis.text.x=element_text(angle=60,hjust=1,vjust=1))
+```
+
+### Terms enriched in Control (downregulated genes)
+```{r Enr-plots_VEvsC_DOWN, echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(RColorBrewer)
+
+data <- read.csv("data/Enrichment/VEvsC_praw_DOWN_selected_long.csv")
+
+data$Name <- as.factor(data$Name)
+data$Count <- as.integer(data$Count)
+data$Category <- as.factor(data$Category)
+
+ggplot(data, aes(x = Name, y = Count, fill = Category)) + 
+  geom_bar(stat = "identity") + 
+  scale_fill_brewer(palette = "Set2") +
+  theme(axis.text.x=element_text(angle=60,hjust=1,vjust=1))
+```
+
+# 3. Functional networks based on likelihood ratio test  
+Figure for this network is still under construction.  
+Cytoscape file can be found under output/DAVID/EnrichmentMap_LRT.cys.
+
+# 4. Predicted protein interactions  
+Figure for this network is still under construction.  
+Images of networks, enrichment tables and cytoscape file can be found under output/STRING_PPI.
