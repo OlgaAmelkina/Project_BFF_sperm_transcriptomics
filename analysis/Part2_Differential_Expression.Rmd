@@ -1,0 +1,377 @@
+---
+title: "Part 2. Differential Expression Analysis"
+author: "Olga Amelkina"
+date: "3/24/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+```
+
+# 1. Pairwise analysis using Wald test  
+Three groups were selected for differential expression pairwise analysis:  
+1. Control diet (n = 10)  
+2. Vitamin E diet (n = 15)  
+3. Wild individuals (n = 4)  
+
+Carcass diet was not included due to low sample size (n = 2).  
+All output of differential expression analysis can be found under output/DEGs.
+
+Code using DESeq2 is hidden from this report due to length, but can be found in Part2_Differential_Expression.Rmd file.  
+```{r Pairwise-Wald, eval=FALSE, include=FALSE}
+#library
+library(tximport)
+library(DESeq2)
+library(tidyverse)
+library(gtools)
+
+
+##Import RSEM
+dir <- "RSEM/Gene_counts/"
+list.files(dir)
+
+samples <- read.table("RSEM/SampleIDs_3groups.txt", header = TRUE)
+samples
+
+files <- file.path(dir, samples$ID, "genes.results")
+names(files) <- samples$ID
+all(file.exists(files))
+
+txi.rsem <- tximport(files, type = "rsem", txIn = FALSE, txOut = FALSE)                  
+head(txi.rsem$counts)
+txi.rsem$length[txi.rsem$length <= 0] <- 1
+
+##Create dds file in DESeq2
+colData <- read.csv("metadata_3groups.csv", row.names=1)
+
+all(rownames(colData) %in% colnames(txi.rsem$counts))
+all(rownames(colData) == colnames(txi.rsem$counts))
+
+colData$Diet <- factor(colData$Diet)
+
+dds <- DESeqDataSetFromTximport(txi.rsem, colData = colData, design = ~ Diet)
+dds
+
+#Run DESeq2
+levels(dds$Diet)
+dds$Diet <- factor(dds$Diet, levels=c("Wild", "Control", "VitE"))
+dds <- DESeq(dds)
+
+##Export rlog normalized data for plots
+rlt <- rlogTransformation(dds)
+
+pcaData <- plotPCA(rlt, intgroup='Diet', returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+write.csv(pcaData, file="Plots/PCA_data_3groups.csv", row.names = FALSE)
+write.csv(percentVar, file="Plots/PCA_percentVar_3groups.csv", row.names = FALSE)
+
+rlt_mat <- assay(rlt)
+dim(rlt_mat)
+write.csv(rlt_mat, file="Plots/Rlt_matrix_3groups_IDs.csv", row.names = TRUE)
+write.csv(rlt_mat, file="Plots/Rlt_matrix_3groups.csv", row.names = FALSE)
+
+#---------------------------------------------
+##Results for Control vs Wild
+resultsNames(dds)
+res <- results(dds, name = "Diet_Control_vs_Wild")
+summary(res)
+sum(res$padj < 0.1, na.rm=TRUE)
+sum(res$padj < 0.05, na.rm=TRUE)
+sum(res$pvalue < 0.05, na.rm=TRUE)
+
+res_df <- as.data.frame(res)
+sum(complete.cases(res_df))
+filter_df <- res_df[complete.cases(res_df),]
+dim(res_df)
+dim(filter_df)
+
+filter_df <- rownames_to_column(filter_df, var='geneid')
+
+annotation <- as.data.frame(read.csv("Mnigripes_GeneIDs.csv"))
+annotated_df <- left_join(filter_df, annotation,
+                          by=c('geneid'='Mnigripes_gene_id'))
+
+annotated_df$FoldChange = logratio2foldchange(annotated_df$log2FoldChange, base=2)
+dim(annotated_df)
+annotated_df <- annotated_df[!duplicated(annotated_df),]
+dim(annotated_df)
+
+res_praw <- annotated_df[annotated_df$pvalue < 0.05,]
+res_praw_FC2 <- res_praw[abs(res_praw$log2FoldChange) > 1, ]
+res_padj <- annotated_df[annotated_df$padj < 0.05,]
+res_padj_FC2 <- res_padj[abs(res_padj$log2FoldChange) > 1, ]
+res_padj01 <- annotated_df[annotated_df$padj < 0.1,]
+res_padj01_FC2 <- res_padj01[abs(res_padj01$log2FoldChange) > 1, ]
+
+dim(res_praw)
+dim(res_praw_FC2)
+dim(res_padj)
+dim(res_padj_FC2)
+dim(res_padj01)
+dim(res_padj01_FC2)
+
+write.csv(annotated_df, file="DEGs/Pairwise_CvsW_all.csv", row.names = FALSE)
+write.csv(res_praw_FC2, file="DEGs/Pairwise_CvsW_praw_FC2.csv", row.names = FALSE)
+write.csv(res_padj_FC2, file="DEGs/Pairwise_CvsW_padj0.05_FC2.csv", row.names = FALSE)
+write.csv(res_padj01_FC2, file="DEGs/Pairwise_CvsW_padj0.1_FC2.csv", row.names = FALSE)
+
+
+#---------------------------------------------
+##Results for Vitamin E vs Wild
+resultsNames(dds)
+res <- results(dds, name = "Diet_VitE_vs_Wild")
+summary(res)
+sum(res$padj < 0.1, na.rm=TRUE)
+sum(res$padj < 0.05, na.rm=TRUE)
+sum(res$pvalue < 0.05, na.rm=TRUE)
+
+res_df <- as.data.frame(res)
+sum(complete.cases(res_df))
+filter_df <- res_df[complete.cases(res_df),]
+dim(res_df)
+dim(filter_df)
+
+filter_df <- rownames_to_column(filter_df, var='geneid')
+
+annotation <- as.data.frame(read.csv("Mnigripes_GeneIDs.csv"))
+annotated_df <- left_join(filter_df, annotation,
+                          by=c('geneid'='Mnigripes_gene_id'))
+
+annotated_df$FoldChange = logratio2foldchange(annotated_df$log2FoldChange, base=2)
+dim(annotated_df)
+annotated_df <- annotated_df[!duplicated(annotated_df),]
+dim(annotated_df)
+
+res_praw <- annotated_df[annotated_df$pvalue < 0.05,]
+res_praw_FC2 <- res_praw[abs(res_praw$log2FoldChange) > 1, ]
+res_padj <- annotated_df[annotated_df$padj < 0.05,]
+res_padj_FC2 <- res_padj[abs(res_padj$log2FoldChange) > 1, ]
+res_padj01 <- annotated_df[annotated_df$padj < 0.1,]
+res_padj01_FC2 <- res_padj01[abs(res_padj01$log2FoldChange) > 1, ]
+
+dim(res_praw)
+dim(res_praw_FC2)
+dim(res_padj)
+dim(res_padj_FC2)
+dim(res_padj01)
+dim(res_padj01_FC2)
+
+write.csv(annotated_df, file="DEGs/Pairwise_VEvsW_all.csv", row.names = FALSE)
+write.csv(res_praw_FC2, file="DEGs/Pairwise_VEvsW_praw_FC2.csv", row.names = FALSE)
+write.csv(res_padj_FC2, file="DEGs/Pairwise_VEvsW_padj0.05_FC2.csv", row.names = FALSE)
+write.csv(res_padj01_FC2, file="DEGs/Pairwise_VEvsW_padj0.1_FC2.csv", row.names = FALSE)
+
+
+#---------------------------------------------
+##Results for Vitamin E vs Control
+levels(dds$Diet)
+dds$Diet <- factor(dds$Diet, levels=c("Control", "VitE", "Wild"))
+dds <- DESeq(dds)
+
+resultsNames(dds)
+res <- results(dds, name = "Diet_VitE_vs_Control")
+summary(res)
+sum(res$padj < 0.1, na.rm=TRUE)
+sum(res$padj < 0.05, na.rm=TRUE)
+sum(res$pvalue < 0.05, na.rm=TRUE)
+
+res_df <- as.data.frame(res)
+sum(complete.cases(res_df))
+filter_df <- res_df[complete.cases(res_df),]
+dim(res_df)
+dim(filter_df)
+
+filter_df <- rownames_to_column(filter_df, var='geneid')
+
+annotation <- as.data.frame(read.csv("Mnigripes_GeneIDs.csv"))
+annotated_df <- left_join(filter_df, annotation,
+                          by=c('geneid'='Mnigripes_gene_id'))
+
+annotated_df$FoldChange = logratio2foldchange(annotated_df$log2FoldChange, base=2)
+dim(annotated_df)
+annotated_df <- annotated_df[!duplicated(annotated_df),]
+dim(annotated_df)
+
+res_praw <- annotated_df[annotated_df$pvalue < 0.05,]
+res_praw_FC2 <- res_praw[abs(res_praw$log2FoldChange) > 1, ]
+res_padj <- annotated_df[annotated_df$padj < 0.05,]
+res_padj_FC2 <- res_padj[abs(res_padj$log2FoldChange) > 1, ]
+res_padj01 <- annotated_df[annotated_df$padj < 0.1,]
+res_padj01_FC2 <- res_padj01[abs(res_padj01$log2FoldChange) > 1, ]
+
+dim(res_praw)
+dim(res_praw_FC2)
+dim(res_padj)
+dim(res_padj_FC2)
+dim(res_padj01)
+dim(res_padj01_FC2)
+
+write.csv(annotated_df, file="DEGs/Pairwise_VEvsC_all.csv", row.names = FALSE)
+write.csv(res_praw_FC2, file="DEGs/Pairwise_VEvsC_praw_FC2.csv", row.names = FALSE)
+write.csv(res_padj_FC2, file="DEGs/Pairwise_VEvsC_padj0.05_FC2.csv", row.names = FALSE)
+write.csv(res_padj01_FC2, file="DEGs/Pairwise_VEvsC_padj0.1_FC2.csv", row.names = FALSE)
+
+```
+
+
+## 1.1 Control vs Wild  
+
+Out of 16912 with nonzero total read count, 87 outliers (0.51%) and 8485 low counts (50%) were filtered out, leaving 8419 complete cases.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 318         | 138                    | 180
+padj < 0.05     | 6           | 1                      | 5
+
+### Volcano plot, Control vs Wild, raw p-value
+```{r Volcano_CvsW_praw, echo=FALSE, message=FALSE, warning=FALSE}
+#Libraries
+library(ggplot2)
+data <- read.csv("output/DEGs/Pairwise_CvsW_all.csv")
+
+data$expression[data$log2FoldChange > 1 & data$pvalue < 0.05] <- "UP"
+data$expression[data$log2FoldChange < 1 & data$pvalue < 0.05] <- "DOWN"
+data$expression[data$pvalue >= 0.05 | abs(data$log2FoldChange) <= 1] <- "Non-Sig"
+
+ggplot(data, aes(x=log2FoldChange, y=-log10(pvalue))) + 
+  geom_point(aes(colour=expression), size=1, alpha=0.5) + scale_colour_manual(values = c('#4575b4', 'grey', '#d73027')) +
+  geom_vline(xintercept = 1, colour='grey', linetype=2) + 
+  geom_vline(xintercept = -1, colour='grey', linetype=2) + geom_hline(yintercept = -log10(0.05), colour='grey', linetype=2) +
+  theme_bw() 
+```
+
+### Volcano plot, Control vs Wild, adjusted p-value
+```{r Colcano_CvsW_padj, echo=FALSE, message=FALSE, warning=FALSE}
+data <- read.csv("output/DEGs/Pairwise_CvsW_all.csv")
+
+data$expression[data$log2FoldChange > 1 & data$padj < 0.05] <- "UP"
+data$expression[data$log2FoldChange < 1 & data$padj < 0.05] <- "DOWN"
+data$expression[data$padj >= 0.05 | abs(data$log2FoldChange) <= 1] <- "Non-Sig"
+
+ggplot(data, aes(x=log2FoldChange, y=-log10(padj))) + 
+  geom_point(aes(colour=expression), size=1, alpha=0.5) + scale_colour_manual(values = c('#4575b4', 'grey', '#d73027')) +
+  geom_vline(xintercept = 1, colour='grey', linetype=2) + 
+  geom_vline(xintercept = -1, colour='grey', linetype=2) + geom_hline(yintercept = -log10(0.05), colour='grey', linetype=2) +
+  theme_bw() 
+```
+
+## 1.2 Vitamin E vs Wild  
+
+Out of 16912 with nonzero total read count, 87 outliers (0.51%) and 13330 low counts (79%) were filtered out, leaving 3574 complete cases.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 130         | 99                     | 31
+padj < 0.05     | 4           | 3                      | 1
+
+
+### Volcano plot, Vitamin E vs Wild, raw p-value
+```{r Volcano_VEvsW_praw, echo=FALSE, message=FALSE, warning=FALSE}
+#Libraries
+library(ggplot2)
+data <- read.csv("output/DEGs/Pairwise_VEvsW_all.csv")
+
+data$expression[data$log2FoldChange > 1 & data$pvalue < 0.05] <- "UP"
+data$expression[data$log2FoldChange < 1 & data$pvalue < 0.05] <- "DOWN"
+data$expression[data$pvalue >= 0.05 | abs(data$log2FoldChange) <= 1] <- "Non-Sig"
+
+ggplot(data, aes(x=log2FoldChange, y=-log10(pvalue))) + 
+  geom_point(aes(colour=expression), size=1, alpha=0.5) + scale_colour_manual(values = c('#4575b4', 'grey', '#d73027')) +
+  geom_vline(xintercept = 1, colour='grey', linetype=2) + 
+  geom_vline(xintercept = -1, colour='grey', linetype=2) + geom_hline(yintercept = -log10(0.05), colour='grey', linetype=2) +
+  theme_bw() 
+```
+
+### Volcano plot, Vitamin E vs Wild, adjusted p-value
+```{r Colcano_VEvsW_padj, echo=FALSE, message=FALSE, warning=FALSE}
+data <- read.csv("output/DEGs/Pairwise_VEvsW_all.csv")
+
+data$expression[data$log2FoldChange > 1 & data$padj < 0.05] <- "UP"
+data$expression[data$log2FoldChange < 1 & data$padj < 0.05] <- "DOWN"
+data$expression[data$padj >= 0.05 | abs(data$log2FoldChange) <= 1] <- "Non-Sig"
+
+ggplot(data, aes(x=log2FoldChange, y=-log10(padj))) + 
+  geom_point(aes(colour=expression), size=1, alpha=0.5) + scale_colour_manual(values = c('#4575b4', 'grey', '#d73027')) +
+  geom_vline(xintercept = 1, colour='grey', linetype=2) + 
+  geom_vline(xintercept = -1, colour='grey', linetype=2) + geom_hline(yintercept = -log10(0.05), colour='grey', linetype=2) +
+  theme_bw() 
+```
+
+## 1.3 Vitamin E vs Control  
+
+Out of 16912 with nonzero total read count, 87 outliers (0.51%) and 12040 low counts (71%) were filtered out, leaving 4864 complete cases.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 690         | 499                    | 187
+padj < 0.05     | 36          | 36                     | 1
+
+
+### Volcano plot, Vitamin E vs Control, raw p-value
+```{r Volcano_VEvsC_praw, echo=FALSE, message=FALSE, warning=FALSE}
+#Libraries
+library(ggplot2)
+data <- read.csv("output/DEGs/Pairwise_VEvsC_all.csv")
+
+data$expression[data$log2FoldChange > 1 & data$pvalue < 0.05] <- "UP"
+data$expression[data$log2FoldChange < 1 & data$pvalue < 0.05] <- "DOWN"
+data$expression[data$pvalue >= 0.05 | abs(data$log2FoldChange) <= 1] <- "Non-Sig"
+
+ggplot(data, aes(x=log2FoldChange, y=-log10(pvalue))) + 
+  geom_point(aes(colour=expression), size=1, alpha=0.5) + scale_colour_manual(values = c('#4575b4', 'grey', '#d73027')) +
+  geom_vline(xintercept = 1, colour='grey', linetype=2) + 
+  geom_vline(xintercept = -1, colour='grey', linetype=2) + geom_hline(yintercept = -log10(0.05), colour='grey', linetype=2) +
+  theme_bw() 
+```
+
+### Volcano plot, Vitamin E vs Control, adjusted p-value
+```{r Colcano_VEvsC_padj, echo=FALSE, message=FALSE, warning=FALSE}
+data <- read.csv("output/DEGs/Pairwise_VEvsC_all.csv")
+
+data$expression[data$log2FoldChange > 1 & data$padj < 0.05] <- "UP"
+data$expression[data$log2FoldChange < 1 & data$padj < 0.05] <- "DOWN"
+data$expression[data$padj >= 0.05 | abs(data$log2FoldChange) <= 1] <- "Non-Sig"
+
+ggplot(data, aes(x=log2FoldChange, y=-log10(padj))) + 
+  geom_point(aes(colour=expression), size=1, alpha=0.5) + scale_colour_manual(values = c('#4575b4', 'grey', '#d73027')) +
+  geom_vline(xintercept = 1, colour='grey', linetype=2) + 
+  geom_vline(xintercept = -1, colour='grey', linetype=2) + geom_hline(yintercept = -log10(0.05), colour='grey', linetype=2) +
+  theme_bw() 
+```
+
+# 2. Likelihood ratio test  
+Because pairwise comparison using Wald test resulted in small number of genes passing false discovery rate (adjusted p-value < 0.05), likelihood ratio test was performed on all groups at once setting different diets as a reference group. This does not show us group-to-group differences, but overall differences based on the reference diet.  
+Here, all individuals used for RNA-seq analysis were included.
+
+## 2.1 Wild diet as a reference
+Out of 17295 with nonzero total read count, 56 outliers (0.32%) and 11290 low counts (65%) were filtered out.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 659         | -                      | -
+padj < 0.05     | 107         | 41                     | 66
+
+## 2.2 Control diet as a reference  
+Out of 17295 with nonzero total read count, 55 outliers (0.32%) and 11290 low counts (65%) were filtered out.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 689         | -                      | -
+padj < 0.05     | 107         | 30                     | 77
+
+## 2.3 Vitamin E diet as a reference  
+Using 2d generation Vitamin E diet group.  
+Out of 17295 with nonzero total read count, 55 outliers (0.32%) and 11290 low counts (65%) were filtered out.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 690         | -                      | -
+padj < 0.05     | 107         | 23                     | 84
+
+## 2.3 Carcass diet as a reference  
+Out of 17295 with nonzero total read count, 55 outliers (0.32%) and 11290 low counts (65%) were filtered out.  
+
+p-value cutoff  | Gene number | Downregulated (FC < 2) | Upregulated (FC > 2)
+--------------- | ----------- |----------------------- | ----------------------
+pvalue < 0.05   | 690         | -                      | -
+padj < 0.05     | 107         | 40                     | 67
