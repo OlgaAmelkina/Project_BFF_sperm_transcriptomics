@@ -1,0 +1,4 @@
+"# background genes","# genes","category","chart color","description","FDR value","genes","network.SUID","nodes.SUID","p-value","PMID","term name","transferred FDR value","year"
+"31","2","STRING Clusters","","RET signaling, and nerve growth factor signaling pathway","0.0125","NTF3|GDNF","12348","12363|12372","2.76E-6","","CL:15840","1.0","0"
+"41","2","GO Molecular Function","","Chemoattractant activity","0.0153","NTF3|GDNF","12348","12363|12372","4.72E-6","","GO:0042056","0.9538742684741403","0"
+"130","2","UniProt Keywords","","Growth factor","0.0305","NTF3|GDNF","12348","12363|12372","4.52E-5","","KW-0339","0.7964416664547511","0"

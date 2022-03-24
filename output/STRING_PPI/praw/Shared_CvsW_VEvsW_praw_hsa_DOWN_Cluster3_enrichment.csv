@@ -1,0 +1,8 @@
+"# background genes","# genes","category","chart color","description","FDR value","genes","network.SUID","nodes.SUID","p-value","PMID","term name","transferred FDR value","year"
+"2","2","GO Cellular Component","","AnxA2-p11 complex","5.32E-5","ANXA2|S100A10","12098","12155|12150","3.13E-8","","GO:1990665","1.0","0"
+"2","2","COMPARTMENTS","","AnxA2-p11 complex","7.24E-5","ANXA2|S100A10","12098","12155|12150","3.13E-8","","GOCC:1990665","0.9686887770235879","0"
+"6","2","STRING Clusters","","Mixed, incl. anxa2-p11 complex, and annexin a1","6.6E-4","ANXA2|S100A10","12098","12155|12150","1.46E-7","","CL:17924","0.7441250135326365","0"
+"13","2","Reactome Pathways","","Dissolution of Fibrin Clot","0.0012","ANXA2|S100A10","12098","12155|12150","5.48E-7","","HSA-75205","0.683378185631843","0"
+"45","2","WikiPathways","","Prostaglandin synthesis and regulation","0.0038","ANXA2|S100A10","12098","12155|12150","5.65E-6","","WP98","0.5662532440064566","0"
+"10","2","GO Biological Process","","Membrane raft assembly","0.0044","ANXA2|S100A10","12098","12155|12150","3.45E-7","","GO:0001765","0.5513567153454066","0"
+"209","2","KEGG Pathways","","Salmonella infection","0.0389","ANXA2|S100A10","12098","12155|12150","1.2E-4","","hsa05132","0.3299067022873568","0"

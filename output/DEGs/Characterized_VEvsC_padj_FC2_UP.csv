@@ -1,0 +1,2 @@
+"geneid","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Mnigripes_transcript_id","Gene_Symbol","Mpfuro_ensembl_gene_id","description_mpfuro","description_hsapiens","FoldChange","expression"
+"MUSNIGG00027626",30.8339406412303,4.4902229293676,1.10867892078364,4.05006611489809,5.12031644440022e-05,0.0223176118640245,"MUSNIGT00033244","LRRFIP1","ENSMPUG00000000081","LRR binding FLII interacting protein 1 [Source:HGNC Symbol;Acc:HGNC:6702]","LRR binding FLII interacting protein 1 [Source:HGNC Symbol;Acc:HGNC:6702]",22.4745905815782,"UP"

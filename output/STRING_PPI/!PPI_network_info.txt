@@ -1,0 +1,14 @@
+Nodes are colored based on the fold change of differential expression.
+From FC -100 (dark blue) to FC 100 (dark red)
+
+Borders of the nodes are colored based on significance.
+From 0 (yellow) to 0.025 (greenish) to 0.05 (purple) for either praw or padj.
+
+Edge thickness depends on the level of confidence in protein-protein interaction.
+
+In padj networks: 
+if nodes and borders are grey, it means these proteins were taken from the database as the closest ones to interact with DEGs
+
+In praw networks:
+PPI clusters in each netowrk were checked for functional enrichment using STRING Enrichment option in Cytoscape STRING app.
+List of functionally enrichmed terms is in.csv tables for each cluster

@@ -1,0 +1,2 @@
+"geneid","baseMean","log2FoldChange","lfcSE","stat","pvalue","padj","Mnigripes_transcript_id","Gene_Symbol","Mpfuro_ensembl_gene_id","description_mpfuro","description_hsapiens","FoldChange","expression"
+"MUSNIGG00011042",5.65382085437935,19.0012151133836,4.4905457419719,4.2313821537958,2.32259672990524e-05,0.0280688247828262,"MUSNIGT00013513","HSD11B1L","ENSMPUG00000006146","hydroxysteroid 11-beta dehydrogenase 1 like [Source:HGNC Symbol;Acc:HGNC:30419]","hydroxysteroid 11-beta dehydrogenase 1 like [Source:HGNC Symbol;Acc:HGNC:30419]",524729.768848958,"UP"

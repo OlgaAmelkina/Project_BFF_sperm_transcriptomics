@@ -1,0 +1,195 @@
+#Pairwise comparison for 3 Diets: control, vitamin E, wild
+
+##Vitamin E vs Control
+> res <- results(dds, name = "Diet_VitE_vs_Control")
+> summary(res)
+
+out of 16912 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 12, 0.071%
+LFC < 0 (down)     : 93, 0.55%
+outliers [1]       : 87, 0.51%
+low counts [2]     : 12040, 71%
+(mean count < 3)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 105
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 36
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 848
+
+> sum(complete.cases(res_df))
+[1] 4864
+> filter_df <- res_df[complete.cases(res_df),]
+> dim(res_df)
+[1] 21407     6
+> dim(filter_df)
+[1] 4864    6
+> dim(annotated_df)
+[1] 5839   13
+> annotated_df <- annotated_df[!duplicated(annotated_df),]
+> dim(annotated_df)
+[1] 4877   13
+
+> dim(res_praw)
+[1] 690  13
+> dim(res_praw_FC2)
+[1] 686  13
+> dim(res_padj)
+[1] 36 13
+> dim(res_padj_FC2)
+[1] 36 13
+> dim(res_padj01)
+[1] 105  13
+> dim(res_padj01_FC2)
+[1] 105  13
+
+padj 0.05, FC2
+DOWN   UP 
+  35    1
+> dim(data.UP)
+[1]  1 14
+> dim(data.DOWN)
+[1] 33 14
+
+praw 0.05 FC2
+DOWN   UP 
+ 499  187
+> dim(data.UP)
+[1] 167  14
+> dim(data.DOWN)
+[1] 458  14
+
+#--------------------------------------------------------
+##Control vs Wild
+> res <- results(dds, name = "Diet_Control_vs_Wild")
+> summary(res)
+
+out of 16912 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 12, 0.071%
+LFC < 0 (down)     : 3, 0.018%
+outliers [1]       : 87, 0.51%
+low counts [2]     : 8485, 50%
+(mean count < 1)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 15
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 6
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 316
+
+> sum(complete.cases(res_df))
+[1] 8419
+> filter_df <- res_df[complete.cases(res_df),]
+> dim(res_df)
+[1] 21407     6
+> dim(filter_df)
+[1] 8419    6
+> dim(annotated_df)
+[1] 10103    13
+> annotated_df <- annotated_df[!duplicated(annotated_df),]
+> dim(annotated_df)
+[1] 8432   13
+
+> dim(res_praw)
+[1] 318  13
+> dim(res_praw_FC2)
+[1] 318  13
+> dim(res_padj)
+[1]  6 13
+> dim(res_padj_FC2)
+[1]  6 13
+> dim(res_padj01)
+[1] 15 13
+> dim(res_padj01_FC2)
+[1] 15 13
+
+padj 0.05, FC2
+DOWN   UP 
+   1    5 
+> dim(data.UP)
+[1]  5 14
+> dim(data.DOWN)
+[1]  1 14
+
+praw 0.05 FC2
+DOWN   UP 
+ 138  180 
+> dim(data.UP)
+[1] 169  14
+> dim(data.DOWN)
+[1] 118  14
+
+
+#--------------------------------------------------------
+##Vitamin E vs Wild
+> res <- results(dds, name = "Diet_VitE_vs_Wild")
+> summary(res)
+
+out of 16912 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 1, 0.0059%
+LFC < 0 (down)     : 11, 0.065%
+outliers [1]       : 87, 0.51%
+low counts [2]     : 13330, 79%
+(mean count < 5)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 12
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 4
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 185
+> res_df <- as.data.frame(res)
+> sum(complete.cases(res_df))
+[1] 3574
+> filter_df <- res_df[complete.cases(res_df),]
+> dim(res_df)
+[1] 21407     6
+> dim(filter_df)
+[1] 3574    6
+
+> dim(annotated_df)
+[1] 4252   13
+> annotated_df <- annotated_df[!duplicated(annotated_df),]
+> dim(annotated_df)
+[1] 3587   13
+
+> dim(res_praw)
+[1] 130  13
+> dim(res_praw_FC2)
+[1] 130  13
+> dim(res_padj)
+[1]  4 13
+> dim(res_padj_FC2)
+[1]  4 13
+> dim(res_padj01)
+[1] 12 13
+> dim(res_padj01_FC2)
+[1] 12 13
+
+padj 0.05, FC2
+DOWN   UP 
+   3    1 
+> dim(data.UP)
+[1]  1 14
+> dim(data.DOWN)
+[1]  3 14
+
+
+praw 0.05 FC2
+DOWN   UP 
+  99   31 
+> dim(data.UP)
+[1] 30 14
+> dim(data.DOWN)
+[1] 87 14

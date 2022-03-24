@@ -1,0 +1,2 @@
+Category	Term	Count	%	PValue	Genes	List Total	Pop Hits	Pop Total	Fold Enrichment	Bonferroni	Benjamini	FDR
+GOTERM_CC_DIRECT	GO:0016021~integral component of membrane	5	62.5	0.08818080096137049	SDCBP, PTPRZ1, TMED2, MANSC1, LRRC37B	8	5401	20164	2.3333641918163304	0.9856846593006969	1.0	1.0

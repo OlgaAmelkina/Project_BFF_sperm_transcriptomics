@@ -1,0 +1,6 @@
+"# background genes","# genes","category","chart color","description","FDR value","genes","network.SUID","nodes.SUID","p-value","PMID","term name","transferred FDR value","year"
+"9","3","Pfam","","XK-related protein","6.06E-6","XKR8|XK|XKR9","11113","9002|8984|9105","1.76E-9","","PF09815","1.0","0"
+"9","3","InterPro Domains","","XK-related protein","1.19E-5","XKR8|XK|XKR9","11113","9002|8984|9105","1.76E-9","","IPR018629","0.9438288836616954","0"
+"6","2","GO Biological Process","","Phosphatidylserine exposure on apoptotic cell surface","0.0188","XKR8|XKR9","11113","9002|9105","1.46E-6","","GO:0070782","0.3307777854180489","0"
+"593","4","GO Biological Process","","Anion transport","0.0269","GABRA4|XKR8|XK|XKR9","11113","9072|9002|8984|9105","4.18E-6","","GO:0006820","0.3009562972818481","0"
+"13","2","GO Biological Process","","Engulfment of apoptotic cell","0.0269","XKR8|XKR9","11113","9002|9105","5.48E-6","","GO:0043652","0.3009562972818481","0"

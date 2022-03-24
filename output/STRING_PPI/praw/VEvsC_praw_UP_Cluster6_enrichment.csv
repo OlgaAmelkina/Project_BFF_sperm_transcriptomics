@@ -1,0 +1,7 @@
+"# background genes","# genes","category","chart color","description","FDR value","genes","network.SUID","nodes.SUID","p-value","PMID","term name","transferred FDR value","year"
+"67","3","STRING Clusters","","Proteoglycan biosynthetic process, and defective ext2 causes exostoses 2","7.9E-4","EXTL3|NDST3|CHST11","8968","9045|9012|9024","1.75E-7","","CL:27656","1.0","0"
+"61","3","GO Biological Process","","Proteoglycan biosynthetic process","0.0017","EXTL3|NDST3|CHST11","8968","9045|9012|9024","1.33E-7","","GO:0030166","0.892720237095459","0"
+"23","2","KEGG Pathways","","Glycosaminoglycan biosynthesis - heparan sulfate / heparin","0.0032","EXTL3|NDST3","8968","9045|9012","9.39E-6","","hsa00534","0.8041747704397775","0"
+"28","2","STRING Clusters","","HS-GAG biosynthesis, and Exostosin-like","0.0206","EXTL3|NDST3","8968","9045|9012","1.36E-5","","CL:27658","0.5434977771038487","0"
+"444","3","UniProt Keywords","","Signal-anchor","0.0315","EXTL3|NDST3|CHST11","8968","9045|9012|9024","4.65E-5","","KW-0735","0.484045435671056","0"
+"23","2","GO Biological Process","","Heparan sulfate proteoglycan biosynthetic process","0.0402","EXTL3|NDST3","8968","9045|9012","9.39E-6","","GO:0015012","0.44990527831037125","0"

@@ -1,0 +1,6 @@
+"# background genes","# genes","category","chart color","description","FDR value","genes","network.SUID","nodes.SUID","p-value","PMID","term name","transferred FDR value","year"
+"194","4","STRING Clusters","","Mixed, incl. constitutive signaling by aberrant pi3k in cancer, and sh2 domain","0.0016","IRS1|TEK|NTF3|GDNF","10075","6685|6721|6575|6589","3.47E-7","","CL:15701","1.0","0"
+"6","2","Reactome Pathways","","Activated NTRK3 signals through PI3K","0.0067","IRS1|NTF3","10075","6685|6575","3.07E-6","","HSA-9603381","0.7775459546952509","0"
+"6","2","STRING Clusters","","Mixed, incl. van maldergem syndrome, and four-jointed box protein 1/four-jointed protein","0.007","DCHS1|FAT3","10075","6693|6658","3.07E-6","","CL:22077","0.770741929774503","0"
+"100","3","STRING Clusters","","Mixed, incl. constitutive signaling by aberrant pi3k in cancer, and ret signaling","0.0074","TEK|NTF3|GDNF","10075","6721|6575|6589","4.88E-6","","CL:15702","0.7621100573168125","0"
+"143","3","WikiPathways","","Brain-derived neurotrophic factor (BDNF) signaling pathway","0.0094","IRS1|PTPRF|NTF3","10075","6685|6654|6575","1.39E-5","","WP2380","0.7249496165167034","0"

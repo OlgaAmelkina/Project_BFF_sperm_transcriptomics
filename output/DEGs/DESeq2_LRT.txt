@@ -1,0 +1,118 @@
+##Results of likelihood ratio test for all diets
+
+#Reference group is Wild
+out of 17295 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 128, 0.74%
+LFC < 0 (down)     : 71, 0.41%
+outliers [1]       : 56, 0.32%
+low counts [2]     : 11290, 65%
+(mean count < 2)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 199
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 107
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 690
+
+> dim(res_praw)
+[1] 659  13
+
+> dim(res_padj)
+[1] 107  13
+DOWN   UP 
+  41   66 
+
+> dim(res_padj01)
+[1] 199  13
+DOWN   UP 
+  71  128 
+
+----------------------------------
+#Reference group is Control
+
+out of 17295 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 130, 0.75%
+LFC < 0 (down)     : 69, 0.4%
+outliers [1]       : 55, 0.32%
+low counts [2]     : 11290, 65%
+(mean count < 2)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 199
+
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 107
+DOWN   UP 
+  30   77 
+
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 689
+
+
+----------------------------------
+#Reference group is VitE 2d generation
+out of 17295 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 157, 0.91%
+LFC < 0 (down)     : 42, 0.24%
+outliers [1]       : 55, 0.32%
+low counts [2]     : 11290, 65%
+(mean count < 2)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 199
+
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 107
+DOWN   UP 
+  23   84 
+
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 690
+
+
+----------------------------------
+#Reference group is Carcass
+
+out of 17295 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)       : 121, 0.7%
+LFC < 0 (down)     : 78, 0.45%
+outliers [1]       : 55, 0.32%
+low counts [2]     : 11290, 65%
+(mean count < 2)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+
+> sum(res$padj < 0.1, na.rm=TRUE)
+[1] 199
+
+> sum(res$padj < 0.05, na.rm=TRUE)
+[1] 107
+DOWN   UP 
+  40   67 
+
+> sum(res$pvalue < 0.05, na.rm=TRUE)
+[1] 690
+
+
+
+
+
+
+
+
+
+
+
+
+

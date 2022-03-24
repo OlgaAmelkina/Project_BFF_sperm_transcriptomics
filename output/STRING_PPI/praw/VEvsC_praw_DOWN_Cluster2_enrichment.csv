@@ -1,0 +1,7 @@
+"# background genes","# genes","category","chart color","description","FDR value","genes","network.SUID","nodes.SUID","p-value","PMID","term name","transferred FDR value","year"
+"26","3","KEGG Pathways","","Phototransduction","5.47E-5","SLC24A1|GRK7|CNGA1","10872","7092|7132|7110","1.63E-7","","hsa04744","1.0","0"
+"34","3","Reactome Pathways","","The phototransduction cascade","7.5E-4","SLC24A1|GRK7|CNGA1","10872","7092|7132|7110","3.46E-7","","HSA-2514856","0.733207283947362","0"
+"297","4","TISSUES","","Retina","0.007","SLC24A1|GRK7|LRIT1|CNGA1","10872","7092|7132|7125|7110","3.65E-6","","BTO:0001175","0.5056066522983615","0"
+"11","2","Reactome Pathways","","Activation of the phototransduction cascade","0.0082","SLC24A1|CNGA1","10872","7092|7110","1.14E-5","","HSA-2485179","0.489483797292784","0"
+"396","4","Reactome Pathways","","G alpha (i) signalling events","0.0082","SLC24A1|GRK7|CCR8|CNGA1","10872","7092|7132|7149|7110","1.13E-5","","HSA-418594","0.489483797292784","0"
+"33","2","Reactome Pathways","","Inactivation, recovery and regulation of the phototransduction cascade","0.0375","GRK7|CNGA1","10872","7132|7110","8.64E-5","","HSA-2514859","0.33457637070927193","0"
